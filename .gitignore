@@ -42,9 +42,6 @@ report/tables_vi_sens-gamma.tex
 tools/*
 !tools/run_study.py
 !tools/gen_tables.py
-!tools/gen_all_maps.py
-!tools/gen_r0_report.py
-!tools/gen_rescue_all.py
 !tools/rerun_all_maps.py
 !tools/rerun_r0.py
 !tools/sens_r0.py
