@@ -184,27 +184,317 @@ def table_epsilon(data):
     write("tables_vi_epsilon.tex", lines, newline="\n")
 
 
+EN_ALGOS = TD
+
+EN_PLACEMENT_ROWS = [
+    (r"Fixed, 2 steps from start", "Yes", "Low",
+     r"Detours from geometric optimal path"),
+    (r"Directly adjacent to start", "Yes", r"$\approx 0$",
+     r"Becomes an essentially free trial"),
+    (r"Random across maps", "Yes", "Variable",
+     r"May fall outside reachable zone"),
+    (r"Pre-activated ($u=1$)", "No", "0", r"Violates pre-activation rule"),
+]
+
+EN_SETTING_ROWS = [
+    ("setting1", "Small baseline map", r"$5\times6$", r"81\,000"),
+    ("setting2", "Narrow corridor", r"$6\times7$", r"222\,264"),
+    ("setting3", "Partitioning interior wall", r"$6\times7$", r"222\,264"),
+    ("setting4", "Extended layout, dedicated rescue alcove", r"$6\times8$", r"331\,776"),
+]
+
+EN_REWARD_LABEL = {
+    "r=0": r"$r=0$ (Baseline)",
+    "r=+10": r"$r=+10$ (Bonus)",
+    "r=-10": r"$r=-10$ (Penalty)",
+    "box-focused": r"Box Priority ($r=0$)",
+    "deadlock-heavy": r"Deadlock $-100$",
+}
+
+EN_COND_LABEL = {"no_tile": "No tile", "r0": r"With tile, $r=0$",
+                 "r10": r"With tile, $r=+10$"}
+
+EN_FLOOR = {"0.9": "38", "0.99": "390", "0.995": "781", "0.9992": "$>$1000"}
+
+
+def en_setting(dp):
+    lines = [r"\begin{table*}[t]",
+             r"\caption{Four map configurations and state space dimensions.}",
+             r"\label{tab:setting}", r"\centering", r"\footnotesize",
+             r"\setlength{\tabcolsep}{4pt}", r"\begin{tabular}{llrrrr}", r"\hline",
+             r"\textbf{Configuration} & \textbf{Description} & \textbf{Grid} & "
+             r"\textbf{Potential States} & \textbf{Reachable States} & "
+             r"\textbf{Terminal States} \\",
+             r"\hline"]
+    for key, desc, grid, potential in EN_SETTING_ROWS:
+        d = dp.get(key, {})
+        lines.append(f"{SLAB[key]} & {desc} & {grid} & {potential} & "
+                     f"{thousands(d['n_states'])} & "
+                     f"{thousands(d['n_terminal_states'])} \\\\")
+    lines += [r"\hline", r"\end{tabular}", r"\end{table*}"]
+    write("tables_en_setting.tex", lines)
+
+
+def en_placement():
+    lines = [r"\begin{table}[t]",
+             r"\caption{Qualitative comparison of rescue tile placement strategies.}",
+             r"\label{tab:placement}", r"\centering", r"\scriptsize",
+             r"\setlength{\tabcolsep}{2pt}", r"\begin{tabular}{lccl}", r"\hline",
+             r"\textbf{Placement Strategy} & \textbf{Valid} & \textbf{Cost} & "
+             r"\textbf{Behavioral Characteristics / Risk} \\",
+             r"\hline"]
+    for row in EN_PLACEMENT_ROWS:
+        lines.append(" & ".join(row) + r" \\")
+    lines += [r"\hline", r"\end{tabular}", r"\end{table}"]
+    write("tables_en_placement.tex", lines)
+
+
+def en_dp(dp):
+    lines = [r"\begin{table*}[t]",
+             r"\caption{Results of the two dynamic programming algorithms on the four "
+             r"configurations ($r_{\text{rescue}}=0$, $\gamma=0.95$).}",
+             r"\label{tab:dp}", r"\centering", r"\footnotesize",
+             r"\setlength{\tabcolsep}{4pt}", r"\begin{tabular}{llcccccc}", r"\hline",
+             r"\textbf{Configuration} & \textbf{Algorithm} & \textbf{Success Rate} & "
+             r"\textbf{Time (s)} & \textbf{Iterations} & \textbf{$V^*(s_0)$} & "
+             r"\textbf{Return} & \textbf{Steps} \\",
+             r"\hline"]
+    for key in SET_ORDER:
+        for tag, name in (("value_iteration", "Value Iteration"),
+                          ("policy_iteration", "Policy Iteration")):
+            m = dp[f"{key}|{name}|0.95"]
+            lines.append(f"{SLAB[key]} & {name} & {m['success_rate']:.2f} & "
+                         f"{m['training_time']:.2f} & {m['iterations']} & "
+                         f"{m['v_start']:.2f} & {m['mean_reward']:.1f} & "
+                         f"{m['mean_steps']:.1f} \\\\")
+    lines += [r"\hline", r"\end{tabular}", r"\end{table*}"]
+    write("tables_en_dp.tex", lines)
+
+
+def en_vipi(dp):
+    lines = [r"\begin{table}[t]",
+             r"\caption{Comparison of value functions and greedy policies between "
+             r"Value Iteration and Policy Iteration.}",
+             r"\label{tab:vipi}", r"\centering", r"\footnotesize",
+             r"\setlength{\tabcolsep}{3pt}", r"\begin{tabular}{lccc}", r"\hline",
+             r"\textbf{Config.} & \textbf{$\max|V_{\text{VI}}-V_{\text{PI}}|$} & "
+             r"\textbf{Policy Match} & \textbf{States} \\",
+             r"\hline"]
+    for key in SET_ORDER:
+        d = dp[key]
+        n = thousands(d["n_states"])
+        lines.append(f"{SLAB[key]} & {sci(d['max_abs_value_difference'])} & "
+                     f"{d['same_policy_states']} / {n} & {n} \\\\")
+    lines += [r"\hline", r"\end{tabular}", r"\end{table}"]
+    write("tables_en_vipi.tex", lines)
+
+
+def en_td_perf(summary):
+    lines = [r"\begin{table*}[t]",
+             r"\caption{Performance evaluation of the four model-free algorithms across "
+             r"30 seeds ($r_{\text{rescue}}=0$, greedy policy).}",
+             r"\label{tab:td_perf}", r"\centering", r"\footnotesize",
+             r"\setlength{\tabcolsep}{4pt}", r"\begin{tabular}{llcccc}", r"\hline",
+             r"\textbf{Configuration} & \textbf{Algorithm} & \textbf{Success Rate} & "
+             r"\textbf{Return} & \textbf{Discounted Return} & \textbf{Steps} \\",
+             r"\hline"]
+    for key in SET_ORDER:
+        for algo in EN_ALGOS:
+            m = summary[f"{key}|{algo}"]
+            lines.append(
+                f"{SLAB[key]} & {algo} & {m['success_rate']:.2f} $\\pm$ "
+                f"{m['success_rate_std']:.2f} & {m['mean_reward']:.1f} $\\pm$ "
+                f"{m['mean_reward_std']:.1f} & {m['mean_discounted_reward']:.2f} $\\pm$ "
+                f"{m['mean_discounted_reward_std']:.2f} & {m['mean_steps']:.1f} $\\pm$ "
+                f"{m['mean_steps_std']:.1f} \\\\")
+    lines += [r"\hline", r"\end{tabular}", r"\end{table*}"]
+    write("tables_en_td_perf.tex", lines)
+
+
+def en_td_behavior(summary):
+    lines = [r"\begin{table}[t]",
+             r"\caption{Rescue tile utilization behavior over 30 seeds: deadlock rate, "
+             r"mean activations, and rescues per episode ($r_{\text{rescue}}=0$).}",
+             r"\label{tab:td_behavior}", r"\centering", r"\footnotesize",
+             r"\setlength{\tabcolsep}{3.5pt}", r"\begin{tabular}{llccc}", r"\hline",
+             r"\textbf{Config.} & \textbf{Algorithm} & \textbf{Deadlock} & "
+             r"\textbf{Activ.} & \textbf{Rescue} \\",
+             r"\hline"]
+    for key in SET_ORDER:
+        for algo in EN_ALGOS:
+            m = summary[f"{key}|{algo}"]
+            lines.append(f"{SLAB[key]} & {algo} & {m['deadlock_rate']:.3f} & "
+                         f"{m['mean_rescue_activations']:.2f} & "
+                         f"{m['mean_rescue_uses']:.2f} \\\\")
+    lines += [r"\hline", r"\end{tabular}", r"\end{table}"]
+    write("tables_en_td_behavior.tex", lines)
+
+
+def en_ablation(data):
+    with_tile = data["ablation_with"]
+    without = data["ablation_without"]
+    lines = [r"\begin{table*}[t]",
+             r"\caption{Ablation study comparing configurations with and without rescue "
+             r"tile across all maps (30 seeds, $r_{\text{rescue}}=0$).}",
+             r"\label{tab:ablation}", r"\centering", r"\scriptsize",
+             r"\setlength{\tabcolsep}{3pt}", r"\begin{tabular}{llcccccc}", r"\hline",
+             r"\textbf{Configuration} & \textbf{Algorithm} & \textbf{Success} & "
+             r"\textbf{Return} & \textbf{Steps} & \textbf{Success} & \textbf{Return} & "
+             r"\textbf{Steps} \\",
+             r"\hline",
+             r"\multicolumn{2}{c}{} & \multicolumn{3}{c}{\textbf{With Rescue Tile}} & "
+             r"\multicolumn{3}{c}{\textbf{Without Rescue Tile}} \\",
+             r"\hline"]
+    for key in SET_ORDER:
+        for algo in EN_ALGOS:
+            k = f"{key}|{algo}"
+            a = with_tile[k]
+            b = without[key][k]
+            lines.append(f"{SLAB[key]} & {algo} & {a['success_rate']:.2f} & "
+                         f"{a['mean_reward']:.1f} & {a['mean_steps']:.1f} & "
+                         f"{b['success_rate']:.2f} & {b['mean_reward']:.1f} & "
+                         f"{b['mean_steps']:.1f} \\\\")
+        lines.append(r"\hline")
+    lines += [r"\end{tabular}", r"\end{table*}"]
+    write("tables_en_ablation.tex", lines)
+
+
+def en_rescue_train():
+    import numpy as np
+    rows = gen_rescue_all.load()
+    st = gen_rescue_all.stats(rows)
+    lines = [r"\begin{table*}[t]",
+             r"\caption{Rescue tile impact on learning dynamics on Setting 3 across four "
+             r"TD/MC algorithms (30 seeds, 1000 episodes). ``Ep. to 0.9'' denotes the "
+             r"first episode where the rolling 50-episode success rate reaches 0.9; "
+             r"Timeout denotes episode truncation rate.}",
+             r"\label{tab:rescue_train}", r"\centering", r"\scriptsize",
+             r"\setlength{\tabcolsep}{3pt}", r"\begin{tabular}{llcccc}", r"\hline",
+             r"\textbf{Algorithm} & \textbf{Condition} & \textbf{Training Success} & "
+             r"\textbf{Ep. to 0.9} & \textbf{Deadlock} & \textbf{Timeout} \\",
+             r"\hline"]
+    for algo in gen_rescue_all.ALGOS:
+        for cond in gen_rescue_all.CONDS:
+            s = st[(algo, cond)]
+            rs = [r for r in rows if r["algo"] == algo and r["cond"] == cond]
+            to = float(np.mean([np.mean(r["timeout"]) for r in rs]))
+            lines.append(f"{algo} & {EN_COND_LABEL[cond]} & {s['success']:.3f} $\\pm$ "
+                         f"{s['success_std']:.3f} & {s['e2t']:.0f} $\\pm$ "
+                         f"{s['e2t_std']:.0f} & {s['deadlock']:.3f} & "
+                         f"{to:.3f} \\\\")
+        lines.append(r"\hline")
+    lines += [r"\end{tabular}", r"\end{table*}"]
+    write("tables_en_rescue_train.tex", lines)
+
+
+def en_sens(sens):
+    lines = [r"\begin{table}[t]",
+             r"\caption{Sensitivity analysis of learning rate $\alpha$ and discount "
+             r"factor $\gamma$ for Q-Learning on Setting 3 (30 seeds, 600 episodes, "
+             r"$r_{\text{rescue}}=0$).}",
+             r"\label{tab:sens}", r"\centering", r"\scriptsize",
+             r"\setlength{\tabcolsep}{3pt}", r"\begin{tabular}{lcccc}", r"\hline",
+             r"\textbf{Parameter} & \textbf{Success Rate} & \textbf{Return} & "
+             r"\textbf{Discounted} & \textbf{Steps} \\",
+             r"\hline"]
+    for p in ("0.05", "0.1", "0.2", "0.4"):
+        m = sens["alpha"][p]
+        lines.append(f"$\\alpha={float(p):.2f}$ & {m['success_rate']:.2f} $\\pm$ "
+                     f"{m['success_rate_std']:.2f} & {m['mean_reward']:.1f} $\\pm$ "
+                     f"{m['mean_reward_std']:.1f} & "
+                     f"{m['mean_discounted_reward']:.2f} $\\pm$ "
+                     f"{m['mean_discounted_reward_std']:.2f} & "
+                     f"{m['mean_steps']:.1f} $\\pm$ {m['mean_steps_std']:.1f} \\\\")
+    lines.append(r"\hline")
+    for p in ("0.8", "0.9", "0.95", "0.99"):
+        m = sens["gamma"][p]
+        lines.append(f"$\\gamma={float(p):.2f}$ & {m['success_rate']:.2f} $\\pm$ "
+                     f"{m['success_rate_std']:.2f} & {m['mean_reward']:.1f} $\\pm$ "
+                     f"{m['mean_reward_std']:.1f} & "
+                     f"{m['mean_discounted_reward']:.2f} $\\pm$ "
+                     f"{m['mean_discounted_reward_std']:.2f} & "
+                     f"{m['mean_steps']:.1f} $\\pm$ {m['mean_steps_std']:.1f} \\\\")
+    lines += [r"\hline", r"\end{tabular}", r"\end{table}"]
+    write("tables_en_sens.tex", lines)
+
+
+def en_sens_reward(sens):
+    lines = [r"\begin{table}[t]",
+             r"\caption{Sensitivity to reward formulation for Q-Learning on Setting 3 "
+             r"(30 seeds, 600 episodes).}",
+             r"\label{tab:sens-reward}", r"\centering", r"\footnotesize",
+             r"\setlength{\tabcolsep}{3pt}", r"\begin{tabular}{lcccc}", r"\hline",
+             r"\textbf{Formulation} & \textbf{Success} & \textbf{Return} & "
+             r"\textbf{Steps} & \textbf{Rescues} \\",
+             r"\hline"]
+    for key in ("r=0", "r=+10", "r=-10", "box-focused", "deadlock-heavy"):
+        m = sens["reward"][key]
+        lines.append(f"{EN_REWARD_LABEL[key]} & {m['success_rate']:.2f} $\\pm$ "
+                     f"{m['success_rate_std']:.2f} & {m['mean_reward']:.1f} & "
+                     f"{m['mean_steps']:.1f} & {m['mean_rescue_uses']:.2f} \\\\")
+    lines += [r"\hline", r"\end{tabular}", r"\end{table}"]
+    write("tables_en_sens-reward.tex", lines)
+
+
+def en_epsilon(data):
+    n = int(data.get("seeds", 30))
+    scale = (n / (n - 1)) ** 0.5 if n > 1 else 1.0
+    lines = [r"\begin{table*}[t]",
+             r"\caption{Exploration schedule sensitivity: comparing final greedy "
+             r"performance under different $\varepsilon$-decay rates on Setting 3 "
+             r"(30 seeds, 1000 episodes, $r_{\text{rescue}}=0$).}",
+             r"\label{tab:epsilon}", r"\centering", r"\scriptsize",
+             r"\setlength{\tabcolsep}{4pt}", r"\begin{tabular}{llccccc}", r"\hline",
+             r"\textbf{Decay Rate} & \textbf{Floor Episode} & \textbf{Final Training "
+             r"$\varepsilon$} & \textbf{Q-Learning} & \textbf{SARSA} & "
+             r"\textbf{Expected SARSA} & \textbf{Monte Carlo Control} \\",
+             r"\hline"]
+    for decay in EPS_DECAYS:
+        block = data["decays"][decay]
+        cells = []
+        for algo in EN_ALGOS:
+            m = block[algo]
+            cells.append(f"{m['success_rate']:.3f} $\\pm$ "
+                         f"{m['success_rate_std'] * scale:.3f}")
+        final = max(0.02, float(decay) ** data["episodes"])
+        lines.append(f"{float(decay):.4f} & {EN_FLOOR[decay]} & {final:.4f} & " +
+                     " & ".join(cells) + r" \\")
+    lines += [r"\hline", r"\end{tabular}", r"\end{table*}"]
+    write("tables_en_epsilon.tex", lines)
+
+
 def main():
     os.makedirs(REP, exist_ok=True)
     os.makedirs(os.path.join(REP, "figures"), exist_ok=True)
 
-    # Bang mo ta va bang lay tu ket qua quy hoach dong.
-    table_setting(load("study_results.json")["dp"])
+    old = load("study_results.json")
+    r0 = load("study_r0.json")
+    main_all = load("study_all.json")
+    sens = load("sens_r0.json")
+    eps = load("eps_r0.json")
+
+    # Bang tieng Viet.
+    table_setting(old["dp"])
     table_placement()
-    table_vipi(load("study_results.json")["dp"])
-
-    # Hieu nang, hanh vi, ablation va quy hoach dong tren bon ban do.
+    table_vipi(old["dp"])
     gen_all_maps.main()
-    table_td_behavior(load("study_all.json")["td_summary"])
-
-    # Do nhay tham so tren 30 seed.
-    gen_r0_report.sens_table(load("sens_r0.json"))
-
-    # Quet he so giam epsilon.
-    table_epsilon(load("eps_r0.json"))
-
-    # O cuu ho va toc do hoc (doc rescue_probe.json + rescue_probe_rest.json).
+    table_td_behavior(main_all["td_summary"])
+    gen_r0_report.sens_table(sens)
+    table_epsilon(eps)
     gen_rescue_all.main()
+
+    # Bang tieng Anh.
+    en_setting(old["dp"])
+    en_placement()
+    en_dp(main_all["dp"])
+    en_vipi(old["dp"])
+    en_td_perf(r0["td_summary"])
+    en_td_behavior(main_all["td_summary"])
+    en_ablation(main_all)
+    en_sens(sens)
+    en_sens_reward(sens)
+    en_epsilon(eps)
+    en_rescue_train()
 
     print("Da sinh xong cac bang trong", REP)
 
