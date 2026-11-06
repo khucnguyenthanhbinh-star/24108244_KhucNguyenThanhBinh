@@ -63,6 +63,24 @@ python main.py --demo-all --setting 1
 python main.py --demo --setting 3
 ```
 
+### Tái lập thực nghiệm và sinh bảng của báo cáo
+
+```bash
+# Thí nghiệm chính (r_rescue = 0) — dùng cho các bảng trong báo cáo
+python tools/rerun_all_maps.py     # -> saved_models/study_all.json
+python tools/rerun_r0.py           # -> saved_models/study_r0.json
+python tools/sens_r0.py            # -> saved_models/sens_r0.json
+python tools/eps_r0.py             # -> saved_models/eps_r0.json
+python tools/rescue_probe.py       # -> saved_models/rescue_probe*.json
+
+# Sinh toàn bộ bảng số liệu trong report/
+python tools/gen_tables.py
+```
+
+`tools/run_study.py --seeds 30 --episodes 1000` chạy trọn quy trình
+huấn luyện, ablation, độ nhạy và quét ε theo cấu hình phần thưởng mặc định,
+kết quả ghi vào `saved_models/study_results.json`.
+
 ---
 
 ## 4. Cấu trúc mã nguồn
@@ -87,7 +105,25 @@ RL_Sokoban_Source_Code/
 ├── tests/                     # Bộ kiểm thử tự động
 │   ├── test_env.py            # Kiểm thử tính đúng đắn của môi trường, deadlock, rescue
 │   └── test_algorithms.py     # Kiểm thử sự hội tụ của 6 thuật toán
-├── saved_models/              # Dữ liệu thực nghiệm lưu trữ dạng JSON (30 seeds)
+├── tools/                     # Script chạy thực nghiệm và sinh bảng báo cáo
+│   ├── run_study.py           # Chạy trọn quy trình thực nghiệm
+│   ├── rerun_all_maps.py      # Thí nghiệm chính trên 4 bản đồ (r_rescue = 0)
+│   ├── rerun_r0.py            # Toàn bộ nghiên cứu với r_rescue = 0
+│   ├── sens_r0.py             # Phân tích độ nhạy alpha, gamma, phần thưởng
+│   ├── eps_r0.py              # Quét hệ số giảm epsilon
+│   ├── rescue_probe.py        # Khảo sát ô cứu hộ khi huấn luyện
+│   ├── gen_tables.py          # Sinh toàn bộ bảng trong report/
+│   ├── gen_all_maps.py        # Bảng hiệu năng, ablation, quy hoạch động
+│   ├── gen_r0_report.py       # Bảng độ nhạy và đường học
+│   └── gen_rescue_all.py      # Bảng và hình về ô cứu hộ khi huấn luyện
+├── saved_models/              # Dữ liệu thực nghiệm lưu trữ dạng JSON
+│   ├── study_all.json         # Thí nghiệm chính, 30 seed, r_rescue = 0
+│   ├── study_r0.json          # Bản đầy đủ của thí nghiệm chính
+│   ├── sens_r0.json           # Độ nhạy tham số (30 seed, 600 episode)
+│   ├── eps_r0.json            # Quét epsilon (30 seed, 1000 episode)
+│   ├── rescue_probe*.json     # Khảo sát ô cứu hộ khi huấn luyện
+│   ├── study_results.json     # Bộ cũ, cấu hình phần thưởng mặc định (r = +10)
+│   └── training_results.json  # Kết quả chạy thử ngắn, không dùng cho báo cáo
 ├── main.py                    # Điểm khởi chạy chương trình chính
 ├── requirements.txt           # Danh mục thư viện phụ thuộc
 └── README.md                  # Tài liệu hướng dẫn sử dụng

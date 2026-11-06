@@ -1,5 +1,4 @@
 report/
-tools/
 # Python bytecode & cache
 __pycache__/
 *.py[cod]
@@ -38,25 +37,25 @@ report/tables_vi_td.tex
 report/tables_vi_sens-alpha.tex
 report/tables_vi_sens-gamma.tex
 
-# Internal research scripts
-tools/make_review_docx*.py
-tools/gen_r0_report.py
-tools/gen_rescue_all.py
-tools/rerun_*.py
-tools/rescue_probe.py
-tools/eps_r0.py
-tools/sens_r0.py
+# Chi commit cac script sinh so lieu va bang cua bao cao.
+# Cac script noi bo (review docx, code guide, lam bia...) khong dua len.
+tools/*
+!tools/run_study.py
+!tools/gen_tables.py
+!tools/gen_all_maps.py
+!tools/gen_r0_report.py
+!tools/gen_rescue_all.py
+!tools/rerun_all_maps.py
+!tools/rerun_r0.py
+!tools/sens_r0.py
+!tools/eps_r0.py
+!tools/rescue_probe.py
+!tools/finalize_report.py
 
 # Large probe files / raw traces
 saved_models/*.npz
 saved_models/*.npy
-saved_models/rescue_probe_rest.json
-saved_models/rescue_probe.json
 
 # Virtual environments
 .venv/
 venv/
-tools/make_front_matter.py
-tools/merge_cover.py
-tools/fix_teacher_name.py
-tools/finalize_report.py
