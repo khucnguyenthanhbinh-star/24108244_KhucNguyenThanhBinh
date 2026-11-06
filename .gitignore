@@ -1,0 +1,62 @@
+report/
+tools/
+# Python bytecode & cache
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Agent tracking & internal review notes
+.omprules
+*.docx
+report/CHANGELOG.md
+report/DEFECT_LEDGER.md
+report/OPEN_ISSUES.md
+report/PROJECT_STATE.md
+report/REPORT_SPEC.md
+report/REVIEW_COMMENTS_ROUND1.md
+report/REVIEW_LEDGER.md
+report/review_comments_round1.json
+report/*.zip
+report/slide_backup.pptx
+report/slide_ban_goc.pptx
+
+# Redundant duplicate directories & build logs
+source_code/
+kaggle_output/
+kaggle_run/
+report/_build_check/
+report/_test_build*/
+report/figures_en/
+report/*.log
+report/*.aux
+report/*.out
+
+# Old unused aggregate tables
+report/tables_en.tex
+report/tables_vi.tex
+report/tables_vi_td.tex
+report/tables_vi_sens-alpha.tex
+report/tables_vi_sens-gamma.tex
+
+# Internal research scripts
+tools/make_review_docx*.py
+tools/gen_r0_report.py
+tools/gen_rescue_all.py
+tools/rerun_*.py
+tools/rescue_probe.py
+tools/eps_r0.py
+tools/sens_r0.py
+
+# Large probe files / raw traces
+saved_models/*.npz
+saved_models/*.npy
+saved_models/rescue_probe_rest.json
+saved_models/rescue_probe.json
+
+# Virtual environments
+.venv/
+venv/
+tools/make_front_matter.py
+tools/merge_cover.py
+tools/fix_teacher_name.py
+tools/finalize_report.py

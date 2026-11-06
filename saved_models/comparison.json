@@ -1,0 +1,218 @@
+{
+  "setting1|Value Iteration": {
+    "success_rate": 1.0,
+    "success_std": 0.0,
+    "deadlock_rate": 0.0,
+    "mean_reward": 138.8,
+    "mean_steps": 12.0,
+    "training_time": 1.3912737369537354,
+    "n_states": 439
+  },
+  "setting1|Policy Iteration": {
+    "success_rate": 1.0,
+    "success_std": 0.0,
+    "deadlock_rate": 0.0,
+    "mean_reward": 138.8,
+    "mean_steps": 12.0,
+    "training_time": 0.40236878395080566,
+    "n_states": 439
+  },
+  "setting1|Q-Learning": {
+    "success_rate": 0.0,
+    "success_std": 0.0,
+    "deadlock_rate": 0.0,
+    "mean_reward": 7.999999999999988,
+    "mean_steps": 120.0,
+    "training_time": 0.6531836986541748,
+    "n_states": 439
+  },
+  "setting1|SARSA": {
+    "success_rate": 0.0,
+    "success_std": 0.0,
+    "deadlock_rate": 0.0,
+    "mean_reward": -1.999999999999982,
+    "mean_steps": 120.0,
+    "training_time": 0.593916654586792,
+    "n_states": 439
+  },
+  "setting1|Expected SARSA": {
+    "success_rate": 0.08,
+    "success_std": 0.0,
+    "deadlock_rate": 0.4,
+    "mean_reward": 5.0579999999999545,
+    "mean_steps": 83.42,
+    "training_time": 0.7116658687591553,
+    "n_states": 439
+  },
+  "setting1|Monte Carlo Control": {
+    "success_rate": 1.0,
+    "success_std": 0.0,
+    "deadlock_rate": 0.0,
+    "mean_reward": 138.8,
+    "mean_steps": 12.0,
+    "training_time": 0.3952445983886719,
+    "n_states": 439
+  },
+  "setting2|Value Iteration": {
+    "success_rate": 1.0,
+    "success_std": 0.0,
+    "deadlock_rate": 0.0,
+    "mean_reward": 138.60000000000002,
+    "mean_steps": 14.0,
+    "training_time": 6.384204387664795,
+    "n_states": 2665
+  },
+  "setting2|Policy Iteration": {
+    "success_rate": 1.0,
+    "success_std": 0.0,
+    "deadlock_rate": 0.0,
+    "mean_reward": 138.60000000000002,
+    "mean_steps": 14.0,
+    "training_time": 1.557518720626831,
+    "n_states": 2665
+  },
+  "setting2|Q-Learning": {
+    "success_rate": 0.0,
+    "success_std": 0.0,
+    "deadlock_rate": 0.0,
+    "mean_reward": 7.999999999999988,
+    "mean_steps": 120.0,
+    "training_time": 0.6529076099395752,
+    "n_states": 2665
+  },
+  "setting2|SARSA": {
+    "success_rate": 0.0,
+    "success_std": 0.0,
+    "deadlock_rate": 0.0,
+    "mean_reward": -1.999999999999982,
+    "mean_steps": 120.0,
+    "training_time": 0.45142507553100586,
+    "n_states": 2665
+  },
+  "setting2|Expected SARSA": {
+    "success_rate": 0.0,
+    "success_std": 0.0,
+    "deadlock_rate": 0.0,
+    "mean_reward": 7.999999999999988,
+    "mean_steps": 120.0,
+    "training_time": 0.6300294399261475,
+    "n_states": 2665
+  },
+  "setting2|Monte Carlo Control": {
+    "success_rate": 0.0,
+    "success_std": 0.0,
+    "deadlock_rate": 0.0,
+    "mean_reward": -1.999999999999982,
+    "mean_steps": 120.0,
+    "training_time": 0.6957149505615234,
+    "n_states": 2665
+  },
+  "setting3|Value Iteration": {
+    "success_rate": 1.0,
+    "success_std": 0.0,
+    "deadlock_rate": 0.0,
+    "mean_reward": 128.5,
+    "mean_steps": 15.0,
+    "training_time": 1.6617391109466553,
+    "n_states": 896
+  },
+  "setting3|Policy Iteration": {
+    "success_rate": 1.0,
+    "success_std": 0.0,
+    "deadlock_rate": 0.0,
+    "mean_reward": 128.5,
+    "mean_steps": 15.0,
+    "training_time": 0.5563759803771973,
+    "n_states": 896
+  },
+  "setting3|Q-Learning": {
+    "success_rate": 0.0,
+    "success_std": 0.0,
+    "deadlock_rate": 0.0,
+    "mean_reward": 7.999999999999988,
+    "mean_steps": 120.0,
+    "training_time": 0.49240970611572266,
+    "n_states": 896
+  },
+  "setting3|SARSA": {
+    "success_rate": 0.0,
+    "success_std": 0.0,
+    "deadlock_rate": 0.0,
+    "mean_reward": -1.999999999999982,
+    "mean_steps": 120.0,
+    "training_time": 0.7778909206390381,
+    "n_states": 896
+  },
+  "setting3|Expected SARSA": {
+    "success_rate": 0.0,
+    "success_std": 0.0,
+    "deadlock_rate": 0.0,
+    "mean_reward": 7.999999999999988,
+    "mean_steps": 120.0,
+    "training_time": 0.6424329280853271,
+    "n_states": 896
+  },
+  "setting3|Monte Carlo Control": {
+    "success_rate": 0.0,
+    "success_std": 0.0,
+    "deadlock_rate": 0.0,
+    "mean_reward": -11.999999999999975,
+    "mean_steps": 120.0,
+    "training_time": 0.5050888061523438,
+    "n_states": 896
+  },
+  "setting4|Value Iteration": {
+    "success_rate": 1.0,
+    "success_std": 0.0,
+    "deadlock_rate": 0.0,
+    "mean_reward": 128.8,
+    "mean_steps": 12.0,
+    "training_time": 7.224430561065674,
+    "n_states": 3004
+  },
+  "setting4|Policy Iteration": {
+    "success_rate": 1.0,
+    "success_std": 0.0,
+    "deadlock_rate": 0.0,
+    "mean_reward": 128.8,
+    "mean_steps": 12.0,
+    "training_time": 2.074012041091919,
+    "n_states": 3004
+  },
+  "setting4|Q-Learning": {
+    "success_rate": 0.0,
+    "success_std": 0.0,
+    "deadlock_rate": 0.0,
+    "mean_reward": 7.999999999999988,
+    "mean_steps": 120.0,
+    "training_time": 0.8657975196838379,
+    "n_states": 3004
+  },
+  "setting4|SARSA": {
+    "success_rate": 0.0,
+    "success_std": 0.0,
+    "deadlock_rate": 0.22,
+    "mean_reward": 6.565999999999909,
+    "mean_steps": 112.34,
+    "training_time": 0.5798807144165039,
+    "n_states": 3004
+  },
+  "setting4|Expected SARSA": {
+    "success_rate": 0.0,
+    "success_std": 0.0,
+    "deadlock_rate": 0.0,
+    "mean_reward": 7.999999999999988,
+    "mean_steps": 120.0,
+    "training_time": 0.8854572772979736,
+    "n_states": 3004
+  },
+  "setting4|Monte Carlo Control": {
+    "success_rate": 0.0,
+    "success_std": 0.0,
+    "deadlock_rate": 0.0,
+    "mean_reward": -1.999999999999982,
+    "mean_steps": 120.0,
+    "training_time": 0.6475081443786621,
+    "n_states": 3004
+  }
+}
