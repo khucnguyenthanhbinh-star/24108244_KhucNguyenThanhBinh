@@ -1,0 +1,85 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+cover/
+
+# Reports & assets
+report/
+saved_models/*.json
+saved_models/*.txt
+tools/
+source_code/
+kaggle_output/
+kaggle_run/
+github_synced/
+tests/
+
+# Sokoban working previews / scripts
+sokoban/*.png
+sokoban/*.txt
+sokoban/build_full_vi.py
+sokoban/patch_limitations.py
+sokoban/update_author.py
+sokoban/.agents/
+sokoban/.skills/
+
+# System & IDE files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Internal files
+.agents/
+.skills/
+.omprules
+AGENTS.md
